@@ -3,6 +3,7 @@ import { Header } from '@/components/Header'
 import { KioskGate } from '@/components/KioskGate'
 import { MenuPage } from '@/pages/MenuPage'
 import { OrderPage } from '@/pages/OrderPage'
+import { DisplayPage } from '@/pages/DisplayPage'
 import { RequireStaff } from '@/auth/RequireStaff'
 import { HOME_BY_ROLE, useSession } from '@/auth/session'
 import { StaffLayout } from '@/staff/StaffLayout'
@@ -44,6 +45,9 @@ export default function App() {
         <Route path="/" element={<MenuPage />} />
         <Route path="/orders/:publicId" element={<OrderPage />} />
       </Route>
+
+      {/* Public now-serving screen (TV at the counter): no login */}
+      <Route path="/display" element={<DisplayPage />} />
 
       {/* Staff panels */}
       <Route path="/staff/login" element={<LoginPage />} />

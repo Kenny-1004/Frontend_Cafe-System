@@ -1077,3 +1077,154 @@ button:disabled {
     transition: none !important;
   }
 }
+
+/* ---------- Public now-serving display (TV) ----------------------------- */
+.display-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--green-house);
+  color: var(--white);
+}
+
+.display-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: clamp(12px, 2vh, 24px) clamp(16px, 3vw, 48px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.display-brand { display: flex; align-items: center; gap: 12px; font-weight: 900; font-size: clamp(1.1rem, 2vw, 1.8rem); }
+.display-brand .brand-mark { width: clamp(36px, 4vw, 56px); height: clamp(36px, 4vw, 56px); color: var(--green-accent); }
+.display-hint { color: var(--green-light); font-weight: 700; font-size: clamp(0.9rem, 1.4vw, 1.3rem); }
+.display-tools { display: flex; align-items: center; gap: 14px; }
+.display-clock { font-size: clamp(1.2rem, 2.2vw, 2rem); font-weight: 900; font-variant-numeric: tabular-nums; }
+.display-sound {
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--white);
+  font-weight: 700;
+  padding: 6px 14px;
+}
+.display-sound.is-on { background: rgba(255, 255, 255, 0.12); }
+.display-offline { color: var(--gold); font-weight: 800; }
+
+.display-columns {
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+  gap: clamp(12px, 2vw, 32px);
+  padding: clamp(16px, 3vh, 36px) clamp(16px, 3vw, 48px);
+}
+
+.display-column {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(12px, 2vh, 24px);
+  padding: clamp(16px, 2.5vw, 32px);
+  border-radius: 28px;
+  min-width: 0;
+}
+
+.display-column.preparing { background: rgba(255, 255, 255, 0.06); }
+.display-column.ready { background: var(--cream); color: var(--green-house); }
+
+.display-column h1 {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: clamp(1.4rem, 3vw, 2.8rem);
+  font-weight: 900;
+  letter-spacing: -0.01em;
+}
+
+.display-count {
+  display: inline-grid;
+  place-items: center;
+  min-width: 1.6em;
+  height: 1.6em;
+  padding: 0 0.4em;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.14);
+  font-size: 0.6em;
+}
+.display-column.ready .display-count { background: var(--green-accent); color: var(--white); }
+
+.display-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(clamp(120px, 12vw, 200px), 1fr));
+  gap: clamp(10px, 1.5vw, 20px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  align-content: start;
+}
+
+.display-column.ready .display-grid { grid-template-columns: repeat(auto-fill, minmax(clamp(150px, 15vw, 260px), 1fr)); }
+
+.display-ticket {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: clamp(12px, 2vh, 22px) 10px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  text-align: center;
+  animation: card-in 0.35s ease-out;
+}
+
+.display-column.ready .display-ticket { background: var(--white); box-shadow: var(--shadow-card); }
+
+.display-number {
+  font-size: clamp(2.4rem, 5vw, 4.8rem);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+.display-column.ready .display-number { font-size: clamp(3rem, 6.5vw, 6.2rem); color: var(--green-accent); }
+
+.display-name {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: clamp(1rem, 1.8vw, 1.6rem);
+  font-weight: 800;
+  opacity: 0.9;
+}
+
+/* A just-ready order glows so waiting customers notice it */
+.display-ticket.is-new {
+  background: var(--green-accent) !important;
+  color: var(--white);
+  animation: card-in 0.35s ease-out, ready-glow 1.4s ease-in-out infinite;
+}
+.display-ticket.is-new .display-number { color: var(--white) !important; }
+
+@keyframes ready-glow {
+  50% { box-shadow: 0 0 0 10px rgba(0, 117, 74, 0.25); transform: scale(1.03); }
+}
+
+.display-empty { opacity: 0.6; font-size: clamp(1rem, 1.6vw, 1.4rem); font-weight: 600; }
+
+.display-error {
+  position: fixed;
+  left: 50%;
+  bottom: 20px;
+  transform: translateX(-50%);
+  padding: 10px 18px;
+  border-radius: var(--radius-pill);
+  background: var(--gold);
+  color: var(--green-house);
+  font-weight: 800;
+}
+
+@media (max-width: 760px) {
+  .display-columns { grid-template-columns: minmax(0, 1fr); }
+  .display-hint { display: none; }
+}

@@ -75,6 +75,10 @@ export function StaffLayout() {
             </div>
           ))}
           <div className="staff-nav-section">
+            <a href="/display" target="_blank" rel="noreferrer" className="staff-nav-link">
+              <span aria-hidden="true">📺</span>
+              Order display
+            </a>
             <a href="/" target="_blank" rel="noreferrer" className="staff-nav-link">
               <span aria-hidden="true">↗</span>
               Preview kiosk
