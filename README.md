@@ -5,6 +5,20 @@ Talks to the API in `../Backend_Cafe-System`.
 
 ## Login info
 
+┌──────────┬───────────┬───────────────────┬───────────────────────────┬────────────┐
+│ Username │ Password  │       Role        │     Opens after login     │ Works now? │
+├──────────┼───────────┼───────────────────┼───────────────────────────┼────────────┤
+│ admin    │ cafe12345 │ Manager           │ /staff/admin (everything) │ ✅ Yes     │
+├──────────┼───────────┼───────────────────┼───────────────────────────┼────────────┤
+│ cashier1 │ not set   │ Cashier           │ /staff/cashier            │ ❌ No      │
+├──────────┼───────────┼───────────────────┼───────────────────────────┼────────────┤
+│ cashier2 │ not set   │ Cashier           │ /staff/cashier            │ ❌ No      │
+├──────────┼───────────┼───────────────────┼───────────────────────────┼────────────┤
+│ barista1 │ not set   │ Barista (kitchen) │ /staff/board              │ ❌ No      │
+├──────────┼───────────┼───────────────────┼───────────────────────────┼────────────┤
+│ barista2 │ not set   │ Barista (kitchen) │ /staff/board              │ ❌ No      │
+└──────────┴───────────┴───────────────────┴───────────────────────────┴────────────┘
+
 Sign in at **http://localhost:5173/staff/login**. Each role lands on its own screen.
 
 | Username | Password | Role | Opens | Can use |
