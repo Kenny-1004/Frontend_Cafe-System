@@ -157,7 +157,7 @@ function CodeDialog({ code, onClose }: { code: PairingCode; onClose: () => void 
   return (
     <Dialog open onClose={onClose} title={`Pair ${code.kiosk.name}`} size="small" footer={<button type="button" className="button button-primary" onClick={onClose}>Done</button>}>
       <div className="stack pairing-code-box">
-        <p>On the tablet, open <strong className="mono">{window.location.origin}/</strong> and enter:</p>
+        <p>On the tablet, open <strong className="mono">{window.location.origin}/kiosk</strong> and enter:</p>
         <p className={`pairing-code${expired ? ' is-expired' : ''}`} aria-label={`Pairing code ${code.pairingCode.split('').join(' ')}`}>{code.pairingCode}</p>
         <p className="muted small">
           {expired ? 'This code expired. Close this and ask for a new one.' : `Works once · expires in ${Math.floor(secondsLeft / 60)}:${String(secondsLeft % 60).padStart(2, '0')}`}

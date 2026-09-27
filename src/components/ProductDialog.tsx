@@ -7,11 +7,12 @@ import { formatCents, formatMoney, toCents } from '@/lib/money'
 type Props = {
   item: MenuItem | null
   icon: string
+  photo: string
   onClose: () => void
 }
 
 // Native <dialog>: focus trapping, Esc to close and the backdrop come from the browser
-export function ProductDialog({ item, icon, onClose }: Props) {
+export function ProductDialog({ item, icon, photo, onClose }: Props) {
   const dialogRef = useRef<HTMLDialogElement>(null)
 
   useEffect(() => {
@@ -30,16 +31,17 @@ export function ProductDialog({ item, icon, onClose }: Props) {
         if (event.target === dialogRef.current) onClose() // click on the backdrop
       }}
     >
-      {item && <ProductForm key={item.key} item={item} icon={icon} onDone={onClose} />}
+      {item && <ProductForm key={item.key} item={item} icon={icon} photo={item.imageUrl ?? photo} onDone={onClose} />}
     </dialog>
   )
 }
 
-function ProductForm({ item, icon, onDone }: { item: MenuItem; icon: string; onDone: () => void }) {
+function ProductForm({ item, icon, photo, onDone }: { item: MenuItem; icon: string; photo: string; onDone: () => void }) {
   const cart = useCart()
   const [selectedId, setSelectedId] = useState(() => defaultOption(item).productId)
   const [quantity, setQuantity] = useState(1)
   const [notes, setNotes] = useState('')
+  const [photoFailed, setPhotoFailed] = useState(false)
 
   const selected = item.options.find((option) => option.productId === selectedId) ?? defaultOption(item)
   const sized = item.options.length > 1
@@ -66,7 +68,11 @@ function ProductForm({ item, icon, onDone }: { item: MenuItem; icon: string; onD
       }}
     >
       <div className="dialog-hero">
-        <span aria-hidden="true">{icon}</span>
+        {photoFailed ? (
+          <span aria-hidden="true">{icon}</span>
+        ) : (
+          <img src={photo} alt="" decoding="async" onError={() => setPhotoFailed(true)} />
+        )}
         <button type="button" className="dialog-close" onClick={onDone} aria-label="Close">
           ×
         </button>

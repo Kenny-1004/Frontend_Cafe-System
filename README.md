@@ -1,6 +1,6 @@
 # Campus Café — Frontend (kiosk + staff panels)
 
-React + TypeScript + Vite, with TanStack Query for all server data.
+React + TypeScript + Vite, with TanStack Query for all server data and Motion for the landing page animations.
 Talks to the API in `../Backend_Cafe-System`.
 
 ## Login info
@@ -19,7 +19,8 @@ Sign in at **http://localhost:5173/staff/login**. Each role lands on its own scr
   (never in production). Change one with `npm run staff:password -- admin "new-password"`, or from
   *Back office → Staff*. Setting a password signs that person out everywhere.
 - 5 wrong passwords in a minute locks that username for a minute on that computer.
-- **Kiosk (`http://localhost:5173/`)** has no login: a tablet is paired once. Sign in as `admin`,
+- **Website (`http://localhost:5173/`)** is the public landing page; its *Order now* button opens the kiosk.
+- **Kiosk (`http://localhost:5173/kiosk`)** has no login: a tablet is paired once. Sign in as `admin`,
   open *Back office → Kiosks → Register kiosk*, then type the 8-character code on the tablet
   (valid 15 minutes, works once). Signed-in managers can open the kiosk directly as a preview.
 - **Database logins** (in `Backend_Cafe-System/.env`, never committed):
@@ -54,8 +55,10 @@ If the backend runs on another port: `API_URL=http://localhost:4000 npm run dev`
 
 | Route | Who | Screen |
 | --- | --- | --- |
-| `/` | customers | Kiosk menu (paired tablets only; others see the pairing screen) |
+| `/` | everyone | Landing page: animated hero, menu highlights, about us, how it works, gallery, contact us; *Order now* opens the kiosk |
+| `/kiosk` | customers | Kiosk menu (paired tablets only; others see the pairing screen) |
 | `/orders/:publicId` | customers | Receipt with the order number; updates live, chimes when ready |
+| `/display` | everyone (no login) | Order display for a TV: Preparing / Ready for pick-up, big numbers + first names, live, optional chime |
 | `/staff/login` | staff | Sign-in (see **Login info** above) |
 | `/staff/cashier` | cashier, admin | Look up an order number, take cash, see the change, cancel |
 | `/staff/board` | barista, cashier, admin | Preparing / Ready columns, Done, Picked up, full-screen mode |
@@ -73,13 +76,15 @@ If the backend runs on another port: `API_URL=http://localhost:4000 npm run dev`
 
 ```
 src/
-  api/          client.ts (fetch + session refresh), types.ts, kiosk.ts, staff.ts, admin.ts
+  api/          client.ts (fetch + session refresh), types.ts, kiosk.ts, staff.ts, admin.ts, display.ts
                 (TanStack Query hooks for every endpoint)
   auth/         SessionProvider (GET /auth/session), RequireStaff route guard
   realtime/     useEventStream: SSE with reconnect + session refresh
   cart/         kiosk cart reducer and provider
   components/   kiosk components (Header, ProductCard, ProductDialog, CartPanel)
-  pages/        kiosk pages (MenuPage, OrderPage)
+  landing/      public landing page (lazy-loaded, so kiosks and staff never download Motion);
+                café address, hours and email live in landing/content.ts
+  pages/        public pages (MenuPage, OrderPage, DisplayPage)
   staff/        StaffLayout, LiveIndicator, pages/ (Login, Cashier, Board), admin/ (back office)
   ui/           Dialog, toasts, Switch, ColumnChart, status badges, formatting helpers
   lib/          money (centavo arithmetic), menu (size grouping), uuid
@@ -98,6 +103,16 @@ src/
   re-fetches the truth. On reconnect every snapshot is re-fetched, so nothing is missed.
 - **Sessions.** Staff cookies are httpOnly; the page never sees a token. A 401 triggers one shared
   refresh + retry; if the session is really gone the app returns to sign-in.
+- **Landing page.** Built with [Motion](https://motion.dev): masked headline reveals, scroll-linked parallax,
+  a scroll-velocity marquee, a pinned horizontal gallery, magnetic buttons and a one-time intro. Everything
+  respects *reduce motion* (no intro, no parallax, the gallery becomes a normal swipeable row).
+  Photos are from Unsplash, stored in `public/landing/`.
+- **Kiosk photos.** One photo per menu category (`categoryPhoto` in `src/lib/menu.ts`, files in
+  `public/menu/` and `public/landing/`), used for the category tabs, banner, cards and product dialog.
+  A product with its own *Image URL* (Back office → Menu) shows that instead.
+- **Order display.** `/display` needs no login and no pairing: open it on a TV at the counter
+  (staff sidebar → *Order display*). It shows only order numbers and first names; a newly ready
+  order glows for 20 seconds, and *Tap for sound* enables a chime (browsers block sound until a tap).
 - **Placing an order** sends an `Idempotency-Key` (one per checkout), so a retry after a network
   error can never create a second order.
 - **Money** is decimal strings from the API; arithmetic is in whole centavos, and the amount the

@@ -20,11 +20,14 @@ export function BrandMark() {
 export function Header() {
   return (
     <header className="header">
-      <Link to="/" className="brand" aria-label="Campus Café, back to menu">
+      <Link to="/kiosk" className="brand" aria-label="Campus Café, back to menu">
         <BrandMark />
         <span className="brand-name">Campus Café</span>
       </Link>
-      <span className="header-tagline">Order here · Pay at the counter</span>
+      <span className="header-tagline">
+        <span className="header-dot" aria-hidden="true" />
+        Order here · Pay at the counter
+      </span>
     </header>
   )
 }

@@ -96,3 +96,24 @@ const CATEGORY_ICONS: Record<string, string> = {
 }
 
 export const categoryIcon = (categoryName: string) => CATEGORY_ICONS[categoryName] ?? '☕'
+
+// One photo per category (Unsplash, stored in /public). A product's own imageUrl wins when set.
+const CATEGORY_PHOTOS: Record<string, { src: string; blurb: string }> = {
+  'Espresso Bar': { src: '/landing/espresso-bar.jpg', blurb: 'Shots pulled to order, straight from the grinder.' },
+  'Hot Coffee': { src: '/landing/hot-coffee.jpg', blurb: 'Lattes, cappuccinos and flat whites with velvet foam.' },
+  'Iced Coffee': { src: '/landing/iced-coffee.jpg', blurb: 'Cold, bold and layered over ice.' },
+  Frappes: { src: '/menu/frappes.jpg', blurb: 'Blended, creamy and made for hot afternoons.' },
+  'Matcha & Tea': { src: '/landing/matcha.jpg', blurb: 'Stone-ground green tea, whisked smooth.' },
+  'Milk Tea': { src: '/menu/milk-tea.jpg', blurb: 'Silky tea, fresh milk and chewy pearls.' },
+  Chocolate: { src: '/menu/chocolate.jpg', blurb: 'Rich cocoa, hot or iced.' },
+  Refreshers: { src: '/menu/refreshers.jpg', blurb: 'Fruit, ice and a little sparkle.' },
+  'Juices & Shakes': { src: '/landing/juice.jpg', blurb: 'Bright, cold and blended fresh.' },
+  'Bottled Drinks': { src: '/menu/bottled-drinks.jpg', blurb: 'Grab-and-go, always chilled.' },
+  'Pastries & Breads': { src: '/menu/pastries.jpg', blurb: 'Baked fresh every morning.' },
+  'Cakes & Desserts': { src: '/menu/cakes.jpg', blurb: 'A little something sweet.' },
+  Sandwiches: { src: '/menu/sandwiches.jpg', blurb: 'Stacked to order for a proper meal.' },
+}
+
+const DEFAULT_PHOTO = { src: '/landing/hot-coffee.jpg', blurb: 'Made fresh, just for you.' }
+
+export const categoryPhoto = (categoryName: string) => CATEGORY_PHOTOS[categoryName] ?? DEFAULT_PHOTO

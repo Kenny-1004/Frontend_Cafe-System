@@ -79,7 +79,7 @@ export function StaffLayout() {
               <span aria-hidden="true">📺</span>
               Order display
             </a>
-            <a href="/" target="_blank" rel="noreferrer" className="staff-nav-link">
+            <a href="/kiosk" target="_blank" rel="noreferrer" className="staff-nav-link">
               <span aria-hidden="true">↗</span>
               Preview kiosk
             </a>

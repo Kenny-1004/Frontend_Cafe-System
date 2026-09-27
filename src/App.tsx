@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react'
 import { Navigate, Outlet, Route, Routes } from 'react-router'
 import { Header } from '@/components/Header'
 import { KioskGate } from '@/components/KioskGate'
@@ -20,6 +21,9 @@ import { StaffPage } from '@/staff/admin/StaffPage'
 import { ReportsPage } from '@/staff/admin/ReportsPage'
 import { KiosksPage } from '@/staff/admin/KiosksPage'
 
+// The landing page carries the animation library; kiosk tablets and staff screens never download it
+const LandingPage = lazy(() => import('@/landing/LandingPage'))
+
 function KioskLayout() {
   return (
     <KioskGate>
@@ -40,9 +44,19 @@ function StaffHome() {
 export default function App() {
   return (
     <Routes>
-      {/* Customer kiosk (public) */}
+      {/* Public website */}
+      <Route
+        path="/"
+        element={
+          <Suspense fallback={<div className="lp-fallback" />}>
+            <LandingPage />
+          </Suspense>
+        }
+      />
+
+      {/* Customer kiosk (paired tablets) */}
       <Route element={<KioskLayout />}>
-        <Route path="/" element={<MenuPage />} />
+        <Route path="/kiosk" element={<MenuPage />} />
         <Route path="/orders/:publicId" element={<OrderPage />} />
       </Route>
 

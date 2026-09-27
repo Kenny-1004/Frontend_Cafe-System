@@ -56,7 +56,7 @@ export function OrderPage() {
   // Free the kiosk for the next customer once the order is closed
   useEffect(() => {
     if (!status || !isFinalStatus(status)) return
-    const timer = setTimeout(() => navigate('/'), RETURN_TO_MENU_MS)
+    const timer = setTimeout(() => navigate('/kiosk'), RETURN_TO_MENU_MS)
     return () => clearTimeout(timer)
   }, [status, navigate])
 
@@ -64,7 +64,7 @@ export function OrderPage() {
     return (
       <main className="page-state">
         <p className="page-state-title">Order not found.</p>
-        <Link to="/" className="button button-primary">Back to menu</Link>
+        <Link to="/kiosk" className="button button-primary">Back to menu</Link>
       </main>
     )
   }
@@ -140,7 +140,7 @@ export function OrderPage() {
           <strong>{formatMoney(data.total)}</strong>
         </div>
 
-        <Link to="/" className="button button-secondary button-block">
+        <Link to="/kiosk" className="button button-secondary button-block">
           {closed ? 'Start a new order' : 'Back to menu'}
         </Link>
         {closed && <p className="muted receipt-footnote">Returning to the menu shortly…</p>}

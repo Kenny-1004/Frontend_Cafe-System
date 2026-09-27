@@ -17,28 +17,30 @@ export function DisplayPage() {
   const now = useNow(1_000)
   const [sound, setSound] = useState(false)
   const soundRef = useRef(sound)
-  soundRef.current = sound
-
-  // When an order turns ready: remember when, so it glows for a while, and chime
-  const readySince = useRef(new Map<number, number>())
-  const known = useRef<Set<number> | null>(null)
-  const ready = display.data?.ready ?? []
   useEffect(() => {
-    const current = new Set(ready.map((order) => order.orderNumber))
-    if (known.current) {
-      const fresh = [...current].filter((number) => !known.current!.has(number))
-      fresh.forEach((number) => readySince.current.set(number, Date.now()))
-      if (fresh.length > 0 && soundRef.current) playChime([659.25, 880, 1046.5])
+    soundRef.current = sound
+  }, [sound])
+
+  // Chime when an order number joins the Ready column (not on first load)
+  const known = useRef<Set<number> | null>(null)
+  const data = display.data
+  useEffect(() => {
+    if (!data) return
+    const current = new Set(data.ready.map((order) => order.orderNumber))
+    const previous = known.current
+    if (previous && soundRef.current && [...current].some((number) => !previous.has(number))) {
+      playChime([659.25, 880, 1046.5])
     }
     known.current = current
-  }, [ready])
+  }, [data])
 
   const stream = useEventStream('/display/events', {
     onEvent: () => void queryClient.invalidateQueries({ queryKey: displayKeys.board }),
     onConnect: () => void queryClient.invalidateQueries({ queryKey: displayKeys.board }),
   })
 
-  const preparing = display.data?.preparing ?? []
+  const preparing = data?.preparing ?? []
+  const ready = data?.ready ?? []
 
   return (
     <div className="display-page">
@@ -72,7 +74,7 @@ export function DisplayPage() {
           <OrderGrid
             orders={ready}
             empty="Ready orders appear here."
-            isNew={(order) => now - (readySince.current.get(order.orderNumber) ?? 0) < HIGHLIGHT_MS}
+            isNew={(order) => now - Date.parse(order.since) < HIGHLIGHT_MS}
           />
         </section>
       </main>

@@ -6,7 +6,7 @@ import { useCart } from '@/cart/cart'
 import { CartPanel } from '@/components/CartPanel'
 import { ProductCard } from '@/components/ProductCard'
 import { ProductDialog } from '@/components/ProductDialog'
-import { categoryIcon, groupProducts, type MenuItem } from '@/lib/menu'
+import { categoryIcon, categoryPhoto, groupProducts, type MenuItem } from '@/lib/menu'
 import { formatCents } from '@/lib/money'
 
 export function MenuPage() {
@@ -68,6 +68,17 @@ export function MenuPage() {
   }
 
   const icon = categoryIcon(activeCategory.name)
+  const photo = categoryPhoto(activeCategory.name)
+
+  const selectCategory = (id: number) => {
+    setActiveCategoryId(id)
+    // Start the new category from its banner rather than mid-way down the old list
+    const main = document.querySelector('.menu-main')
+    if (main && main.getBoundingClientRect().top < 0) {
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' })
+    }
+  }
 
   return (
     <div className="menu-layout">
@@ -79,24 +90,30 @@ export function MenuPage() {
               type="button"
               className={category.id === activeCategory.id ? 'is-active' : ''}
               aria-current={category.id === activeCategory.id ? 'true' : undefined}
-              onClick={() => setActiveCategoryId(category.id)}
+              onClick={() => selectCategory(category.id)}
             >
-              <span aria-hidden="true">{categoryIcon(category.name)}</span> {category.name}
+              <img className="tab-thumb" src={categoryPhoto(category.name).src} alt="" loading="lazy" decoding="async" />
+              {category.name}
             </button>
           ))}
         </nav>
 
         <section className="category-section" aria-labelledby="category-title">
-          <div className="category-heading">
-            <h1 id="category-title">{activeCategory.name}</h1>
-            <p className="muted">
-              {activeCategory.items.length} items
-              {menu.isFetching && <span className="refreshing"> · refreshing…</span>}
-            </p>
-          </div>
-          <div className="product-grid">
-            {activeCategory.items.map((item) => (
-              <ProductCard key={item.key} item={item} icon={icon} onSelect={setSelectedItem} />
+          {/* Keyed by category so the banner and cards replay their entrance on every switch */}
+          <header key={activeCategory.id} className="category-banner">
+            <img src={photo.src} alt="" decoding="async" />
+            <div className="category-banner-text">
+              <p className="category-count">
+                {activeCategory.items.length} items
+                {menu.isFetching && <span className="refreshing"> · refreshing…</span>}
+              </p>
+              <h1 id="category-title">{activeCategory.name}</h1>
+              <p className="category-blurb">{photo.blurb}</p>
+            </div>
+          </header>
+          <div key={`grid-${activeCategory.id}`} className="product-grid">
+            {activeCategory.items.map((item, index) => (
+              <ProductCard key={item.key} item={item} icon={icon} photo={photo.src} index={index} onSelect={setSelectedItem} />
             ))}
           </div>
         </section>
@@ -113,7 +130,7 @@ export function MenuPage() {
         </button>
       )}
 
-      <ProductDialog item={selectedItem} icon={icon} onClose={() => setSelectedItem(null)} />
+      <ProductDialog item={selectedItem} icon={icon} photo={photo.src} onClose={() => setSelectedItem(null)} />
     </div>
   )
 }

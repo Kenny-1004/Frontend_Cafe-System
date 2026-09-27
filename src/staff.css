@@ -872,8 +872,9 @@ html.board-focus .staff-sidebar { display: none; }
   display: grid;
   place-items: center;
   padding: 24px 16px;
-  background: radial-gradient(circle at 80% 0%, #2b5145 0%, var(--green-house) 60%);
+  background: radial-gradient(ellipse 80% 60% at 20% 10%, #183a30 0%, #0d1b17 60%);
 }
+.pairing-card .login-brand h1 { font-family: 'Fraunces', Georgia, serif; font-weight: 500; letter-spacing: -0.02em; }
 .pairing-card {
   width: min(460px, 100%);
   display: flex;
