@@ -16,7 +16,7 @@ export class ApiError extends Error {
   }
 }
 
-// In development Vite proxies /api to the backend (see vite.config.ts), so paths stay relative
+// Vite (development) and Vercel (production, see vercel.json) proxy /api to the backend, so paths stay relative
 // and the staff session cookies are same-origin.
 export const API_BASE = '/api/v1'
 
